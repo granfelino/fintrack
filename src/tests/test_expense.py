@@ -1,4 +1,4 @@
-from fintrack.expense import ExpenseList, Expense, Category
+from fintrack.expense import ExpenseList, Expense, ExpenseDict, Category
 import pytest
 import datetime as dt
 
@@ -36,6 +36,9 @@ def test_expense_wrong_vals():
                 TEST_DESC,
                 TEST_DATE)
 
+def test_expense_to_dict(exp):
+    assert isinstance(Expense.to_dict(), ExpenseDict)
+
 def test_expense_list():
     ExpenseList()
 
@@ -43,9 +46,9 @@ def test_expense_list_add(exp, exp_list):
     exp_list.add(exp)
     assert next(x for x in exp_list.list) == exp
 
-def test_expense_list_to_json(exp_list):
-    result = exp_list.to_json()
-    assert isinstance(result["list"], list[str])
+def test_expense_list_to_dict(exp_list):
+    result = exp_list.to_dict()
+    assert isinstance(result, list[ExpenseDict])
 
 def test_expense_list_to_csv():
     assert False

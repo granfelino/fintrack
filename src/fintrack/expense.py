@@ -1,5 +1,6 @@
 from enum import Enum, auto
 import datetime as dt
+from typing import TypedDict
 
 class Category(Enum):
     RENT = auto()
@@ -10,6 +11,11 @@ class Category(Enum):
     SAVINGS = auto()
     LEISURE = auto()
 
+class ExpenseDict(TypedDict):
+    amount: float
+    category: str
+    desc: str
+    date: str
 
 class Expense():
     def __init__(self,
@@ -40,6 +46,12 @@ class Expense():
     @property
     def date(self) -> dt.date:
         return self.__date
+
+    def to_dict(self) -> TypedDict:
+        return {
+                "amount" : self.amount,
+                "category" : self.category
+                }
 
 class ExpenseList():
     def __init__(self):
