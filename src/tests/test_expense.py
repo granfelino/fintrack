@@ -1,6 +1,7 @@
 from fintrack.expense import ExpenseList, Expense, ExpenseDict, Category
 import pytest
 import datetime as dt
+import pathlib as pl
 
 TEST_AMOUNT = 100.0
 TEST_CAT    = Category.FOOD
@@ -36,8 +37,27 @@ def test_expense_wrong_vals():
                 TEST_DESC,
                 TEST_DATE)
 
+def test_expense_eq(exp):
+    tmp_exp = Expense(TEST_AMOUNT,
+                   TEST_CAT,
+                   TEST_DESC,
+                   TEST_DATE)
+    assert exp == tmp_exp
+
 def test_expense_to_dict(exp):
-    assert isinstance(Expense.to_dict(), ExpenseDict)
+    result = exp.to_dict()
+    keys = result.keys()
+    assert (isinstance(result, dict)
+            and "amount" in keys 
+            and "category" in keys
+            and "desc" in keys
+            and "date" in keys
+            )
+
+def test_expense_from_dict(exp):
+    expected = exp.to_dict()
+    actual = Expense.from_dict(expected)
+    assert actual == exp
 
 def test_expense_list():
     ExpenseList()
@@ -48,7 +68,40 @@ def test_expense_list_add(exp, exp_list):
 
 def test_expense_list_to_dict(exp_list):
     result = exp_list.to_dict()
-    assert isinstance(result, list[ExpenseDict])
+    assert isinstance(result, dict)
+    assert "list" in result.keys()
 
-def test_expense_list_to_csv():
-    assert False
+def test_expense_list_to_json(exp, exp_list, tmp_path):
+    exp_list.add(exp)
+    store_path = tmp_path / "expenses.json"
+    exp_list.to_json(store_path)
+    assert store_path.exists()
+    assert store_path.is_file()
+    assert store_path.suffix == ".json"
+
+def test_expense_list_to_csv(exp, exp_list, tmp_path):
+    store_path = tmp_path / "expenses.csv"
+    exp_list.add(exp)
+    exp_list.to_csv(store_path)
+    assert store_path.exists()
+    assert store_path.is_file()
+    assert store_path.suffix == ".csv"
+
+def test_expense_list_eq(exp, exp_list):
+    exp_list.add(exp)
+    tmp_list = ExpenseList([exp])
+    assert tmp_list == exp_list
+
+def test_expense_list_from_json(exp, exp_list, tmp_path):
+    exp_list.add(exp)
+    store_path = tmp_path / "expenses.json"
+    exp_list.to_json(store_path)
+    result = ExpenseList.from_json(store_path)
+    assert exp_list == result
+
+def test_expense_list_from_csv(exp, exp_list, tmp_path):
+    exp_list.add(exp)
+    store_path = tmp_path / "expenses.csv"
+    exp_list.to_csv(store_path)
+    result = ExpenseList.from_csv(store_path)
+    assert exp_list == result
