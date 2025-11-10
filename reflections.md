@@ -6,3 +6,7 @@
 * __dict__ should be used when all attributes are public and are JSON serializable
 * when creating instances of TypedDict I should create it like a normal dictionary
 * TypedDict are supposed to be used as type hints
+* TypedDict cannot be checked for with isinsatnce() and issubclass()
+* using datetime module for date implementation
+* using dt.datetime.strptime(string, "%Y-%m-%d").date() to extract a date from a string representation of dt.date instance
+* when using pandas to transform a df into a dictionary with DataFrame.to\_dict(), use orient="records" to get a list of dictionaries (colnames : vals)
