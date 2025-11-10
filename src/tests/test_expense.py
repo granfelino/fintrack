@@ -73,11 +73,11 @@ def test_expense_list_to_dict(exp_list):
 
 def test_expense_list_to_json(exp, exp_list, tmp_path):
     exp_list.add(exp)
-    store_path = tmp_path / "expenses.json"
+    store_path = tmp_path
     exp_list.to_json(store_path)
+    store_path = store_path / "exp.json"
     assert store_path.exists()
     assert store_path.is_file()
-    assert store_path.suffix == ".json"
 
 def test_expense_list_to_csv(exp, exp_list, tmp_path):
     store_path = tmp_path / "expenses.csv"
@@ -94,9 +94,9 @@ def test_expense_list_eq(exp, exp_list):
 
 def test_expense_list_from_json(exp, exp_list, tmp_path):
     exp_list.add(exp)
-    store_path = tmp_path / "expenses.json"
+    store_path = tmp_path
     exp_list.to_json(store_path)
-    result = ExpenseList.from_json(store_path)
+    result = ExpenseList.from_json(store_path / "exp.json")
     assert exp_list == result
 
 def test_expense_list_from_csv(exp, exp_list, tmp_path):
@@ -105,3 +105,19 @@ def test_expense_list_from_csv(exp, exp_list, tmp_path):
     exp_list.to_csv(store_path)
     result = ExpenseList.from_csv(store_path)
     assert exp_list == result
+
+def test_view_all(exp, exp_list):
+    exp_list.add(exp)
+    exp_list.view_all()
+
+def test_view_cat(exp, exp_list):
+    exp_list.add(exp)
+    exp_list.view_cat(Category.FOOD)
+
+def test_view_by_date(exp, exp_list):
+    exp_list.add(exp)
+    exp_list.view_by_date(dt.date(2025, 1, 10), dt.date(2025, 2, 10))
+
+def test_summary_by_cat(exp, exp_list):
+    exp_list.add(exp)
+    exp_list.summary_by_cat()
