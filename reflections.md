@@ -10,3 +10,7 @@
 * using datetime module for date implementation
 * using dt.datetime.strptime(string, "%Y-%m-%d").date() to extract a date from a string representation of dt.date instance
 * when using pandas to transform a df into a dictionary with DataFrame.to\_dict(), use orient="records" to get a list of dictionaries (colnames : vals)
+* convert dates in dfs using df["date"] = pd.to\_datetime(df["date"], format="%Y-%m-%d")
+* when comparing pandas series or numpy arrays (or bitwise operations) use '&' and '|' instead of 'and' and 'or'
+* pandas cannot convert a dictionary which does not has an iterable as value into a dataframe
+* pandas has a parameter "errors" in functions like pd.to\_datetime(errors=), and when i do pd.to\_datetime(df["date"], errors="coerce") if the date is none then pandas will parse it as NaT, same goes for other conversions i guess
