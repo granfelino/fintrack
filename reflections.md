@@ -14,3 +14,6 @@
 * when comparing pandas series or numpy arrays (or bitwise operations) use '&' and '|' instead of 'and' and 'or'
 * pandas cannot convert a dictionary which does not has an iterable as value into a dataframe
 * pandas has a parameter "errors" in functions like pd.to\_datetime(errors=), and when i do pd.to\_datetime(df["date"], errors="coerce") if the date is none then pandas will parse it as NaT, same goes for other conversions i guess
+* monkeypatch fixture can allow for mock inputs using monkeypatch.setattr("builtins.input", lambda \_: inputs)
+* when importing whole modules it is better to not pollute the namespace and "import module\_name" -- this is clean
+
