@@ -80,9 +80,9 @@ def test_expense_list_to_json(exp, exp_list, tmp_path):
     assert store_path.is_file()
 
 def test_expense_list_to_csv(exp, exp_list, tmp_path):
-    store_path = tmp_path / "expenses.csv"
+    store_path = tmp_path / "exp.csv"
     exp_list.add(exp)
-    exp_list.to_csv(store_path)
+    exp_list.to_csv(tmp_path)
     assert store_path.exists()
     assert store_path.is_file()
     assert store_path.suffix == ".csv"
@@ -101,8 +101,8 @@ def test_expense_list_from_json(exp, exp_list, tmp_path):
 
 def test_expense_list_from_csv(exp, exp_list, tmp_path):
     exp_list.add(exp)
-    store_path = tmp_path / "expenses.csv"
-    exp_list.to_csv(store_path)
+    store_path = tmp_path / "exp.csv"
+    exp_list.to_csv(tmp_path)
     result = ExpenseList.from_csv(store_path)
     assert exp_list == result
 
