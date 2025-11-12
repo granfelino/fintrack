@@ -1,6 +1,9 @@
 from fintrack.expense import Expense, ExpenseList
 import datetime as dt
 import pathlib as pl
+import logging
+
+logger = logging.getLogger(__name__)
 
 def print_options() -> None:
     print()
@@ -39,14 +42,18 @@ def _input_date() -> dt.date:
     return ret
 
 def input_add_expense(exp: ExpenseList) -> None:
+    logging.info("Adding expense.")
+
     amt = float(input("Enter amount: "))
     if amt < 0:
+        logging.info("Negative amount input.")
         print("Amount cannot be negative.")
         return
 
     cat = input("Enter category (rent, food, health, lifestyle, savings, leisure): ")
     cat = ExpenseList.str_to_cat(cat)
     if cat is None:
+        logging.info("Category not found.")
         return
 
     desc = input("Enter description: ")
@@ -55,16 +62,19 @@ def input_add_expense(exp: ExpenseList) -> None:
     want_date = None
     while want_date != "y" and want_date != "n":
         want_date = input("Do you want to add a date? (y/n) ")
-        print(want_date)
 
     if want_date == "y":
         date = _input_date()
         if date is None:
+            logging.info("Invalid date input.")
             return
 
     exp.add(Expense(amt, cat, desc, date))
+    logging.info("Expense added succesfully")
 
 def input_expense_by_date(exp: ExpenseList) -> None:
+    logging.info("Filtering expenses by date.")
+
     print("Date FROM")
     f = _input_date()
 
@@ -78,6 +88,8 @@ def input_expense_by_date(exp: ExpenseList) -> None:
     exp.view_by_date(f, t)
 
 def input_expense_by_cat(exp: ExpenseList) -> None:
+    logging.info("Filtering expenses by category.")
+
     cat = input("Enter category (rent, food, health, lifestyle, savings, leisure): ")
     cat = ExpenseList.str_to_cat(cat)
     if cat is None:
@@ -85,10 +97,14 @@ def input_expense_by_cat(exp: ExpenseList) -> None:
     exp.view_cat(cat)
 
 def input_to_json(exp: ExpenseList) -> None:
+    logging.info("Saving to JSON.")
+
     path = input("Store path (to a JSON file): ")
     exp.to_json(pl.Path(path))
 
 def input_load_json() -> ExpenseList:
+    logging.info("Loading from JSON.")
+
     print("Warning: this will overwrite the current expense list.")
     exp = None
     path = input("Enter a path to the JSON file of expenses: ")
@@ -96,13 +112,18 @@ def input_load_json() -> ExpenseList:
     if exp is None:
         exp = ExpenseList()
         print("Failed to load.")
+        logging.info("Failed to load from JSON.")
     return exp
 
 def input_to_csv(exp: ExpenseList) -> None:
+    logging.info("Saving to CSV.")
+
     path = input("Store path (to a CSV file): ")
     exp.to_csv(pl.Path(path))
 
 def input_load_csv() -> ExpenseList:
+    logging.info("Loading from CSV.")
+
     print("Warning: this will overwrite the current expense list.")
     exp = None
     path = input("Enter a path to the CSV file of expenses: ")
@@ -110,4 +131,5 @@ def input_load_csv() -> ExpenseList:
     if exp is None:
         exp = ExpenseList()
         print("Failed to load.")
+        logging.info("Failed to load from CSV.")
     return exp

@@ -1,0 +1,7 @@
+2025-11-12 19:15:05,160 - INFO - Application started.
+2025-11-12 19:15:18,356 - INFO - Choice 1 - adding expense.
+2025-11-12 19:15:18,356 - INFO - Adding expense.
+2025-11-12 19:15:25,732 - INFO - Expense added succesfully
+2025-11-12 19:15:27,124 - INFO - Choice 2 - view all.
+2025-11-12 19:15:27,796 - INFO - Choice 3 - filtering by date.
+2025-11-12 19:15:27,796 - INFO - Filtering expenses by date.
