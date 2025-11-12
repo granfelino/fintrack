@@ -78,3 +78,7 @@ def test_input_to_json(exp, monkeypatch, tmp_path):
 def test_input_to_csv(exp, monkeypatch, tmp_path):
     monkeypatch.setattr("builtins.input", lambda _: str(tmp_path))
     cli.input_to_csv(exp)   # XXX: no crash -> all good
+
+
+# XXX no more tests -- I won't learn much more from them and will waste time
+#     I can use on other projects
