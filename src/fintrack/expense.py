@@ -106,7 +106,7 @@ class ExpenseList():
     @classmethod
     def from_json(cls, store_path: pl.Path):
         if not store_path.exists():
-            print(f"Path {store_path} does not exists.")        #TODO do error raising here
+            print(f"Path {store_path} does not exists.")
             return None
 
         if not store_path.suffix == ".json":
@@ -127,7 +127,7 @@ class ExpenseList():
     @classmethod
     def from_csv(cls, store_path: pl.Path):
         if not store_path.exists():
-            print(f"Path {store_path} does not exists.")        #TODO do error raising here
+            print(f"Path {store_path} does not exists.")
             return None
 
         if not store_path.suffix == ".csv":
