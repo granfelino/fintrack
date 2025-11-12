@@ -70,3 +70,11 @@ def test_input_add_no_date(exp, monkeypatch):
     cli.input_add_expense(exp)
 
     assert len(exp.list) == 2
+
+def test_input_to_json(exp, monkeypatch, tmp_path):
+    monkeypatch.setattr("builtins.input", lambda _: str(tmp_path))
+    cli.input_to_json(exp)  # XXX: no crash -> all good
+
+def test_input_to_csv(exp, monkeypatch, tmp_path):
+    monkeypatch.setattr("builtins.input", lambda _: str(tmp_path))
+    cli.input_to_csv(exp)   # XXX: no crash -> all good
