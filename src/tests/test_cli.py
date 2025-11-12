@@ -1,5 +1,21 @@
 from fintrack import cli
+from fintrack.expense import Expense, ExpenseList, Category
 import datetime as dt
+import pytest
+
+EXP_AMT = 100
+EXP_CAT = Category.FOOD
+EXP_DESC = "food shopping"
+EXP_DATE = dt.date(2012, 12, 13)
+
+EXP_ARGS = [EXP_AMT, EXP_CAT, EXP_DESC, EXP_DATE]
+
+
+@pytest.fixture
+def exp():
+    exp = ExpenseList()
+    exp.add(Expense(*EXP_ARGS))
+    return exp
 
 def test_input_date(monkeypatch):
     inputs = "2012 12 31"
@@ -18,3 +34,39 @@ def test_input_date_invalid(monkeypatch):
     monkeypatch.setattr("builtins.input", lambda _: inputs)
     result = cli._input_date()
     assert result is None
+
+def test_input_add(exp, monkeypatch):
+    inputs = ["100", "food", "food shopping", "y", "2012 12 13"]
+    inputs = iter(inputs)
+    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+    cli.input_add_expense(exp)
+
+    assert len(exp.list) == 2
+
+    g = (x for x in exp.list)
+    first = next(g)
+    second = next(g)
+    assert first == second
+
+def test_input_add_inv_amt(exp, monkeypatch):
+    inputs = "-100"
+    monkeypatch.setattr("builtins.input", lambda _: inputs)
+    cli.input_add_expense(exp)
+
+    assert len(exp.list) == 1
+
+def test_input_add_inv_cat(exp, monkeypatch):
+    inputs = ["100", "invalid"]
+    inputs = iter(inputs)
+    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+    cli.input_add_expense(exp)
+
+    assert len(exp.list) == 1
+
+def test_input_add_no_date(exp, monkeypatch):
+    inputs = ["100", "food", "food shopping", "n"]
+    inputs = iter(inputs)
+    monkeypatch.setattr("builtins.input", lambda _: next(inputs))
+    cli.input_add_expense(exp)
+
+    assert len(exp.list) == 2
