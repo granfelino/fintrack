@@ -1,7 +1,6 @@
-from fintrack.expense import ExpenseList, Expense, ExpenseDict, Category
+from fintrack.expense import ExpenseList, Expense, Category
 import pytest
 import datetime as dt
-import pathlib as pl
 
 TEST_AMOUNT = 100.0
 TEST_CAT    = Category.FOOD
