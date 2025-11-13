@@ -6,6 +6,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 def print_options() -> None:
+    """Prints options for user input."""
+
     print()
     print("1.  Add expense")
     print("2.  View all expenses")
@@ -20,6 +22,24 @@ def print_options() -> None:
     print()
 
 def _input_date() -> dt.date | None:
+    """
+    Prompts user for input and creates a date object.
+
+    This function does not take any parameters.
+
+    Returns
+    -------
+    dt.date or None
+        Date created from user input or None in case of botched input values.
+
+    Raises
+    ------
+    ValueError
+        If:
+            - not all 3 (y, m, d) are given at the same time.
+            - the date constructed from user's values is invalid.
+    """
+
     while True:
         try:
             y, m, d = input("Enter each after space - year, month, day: ").split()
@@ -43,6 +63,16 @@ def _input_date() -> dt.date | None:
     return ret
 
 def input_add_expense(exp: ExpenseList) -> None:
+    """
+    Prompts user for input and adds an expense to the passed expense list.
+    This function returns nothing.
+
+    Parameters
+    ----------
+    exp : ExpenseList
+        The list to add the new expense to.
+    """
+
     logging.info("Adding expense.")
 
     try:
@@ -79,6 +109,16 @@ def input_add_expense(exp: ExpenseList) -> None:
     logging.info("Expense added succesfully")
 
 def input_expense_by_date(exp: ExpenseList) -> None:
+    """
+    Filters and prints expenses by date, based on user input.
+    This function returns nothing.
+
+    Parameters
+    ----------
+    exp : ExpenseList
+        List object to filter from.
+    """
+
     logging.info("Filtering expenses by date.")
 
     print("Date FROM")
@@ -98,6 +138,16 @@ def input_expense_by_date(exp: ExpenseList) -> None:
     exp.view_by_date(f, t)
 
 def input_expense_by_cat(exp: ExpenseList) -> None:
+    """
+    Filters expenses by category provided by the user. This function
+    returns nothing.
+
+    Parameters
+    ----------
+    exp : ExpenseList
+        List of expenses to filter.
+    """
+
     logging.info("Filtering expenses by category.")
 
     cat = input("Enter category (rent, food, health, lifestyle, savings, leisure): ")
@@ -107,12 +157,30 @@ def input_expense_by_cat(exp: ExpenseList) -> None:
     exp.view_cat(cat)
 
 def input_to_json(exp: ExpenseList) -> None:
+    """
+    Saves the expense list to JSON, to the location provided by the user.
+    This function returns nothing.
+
+    exp : ExpenseList
+        List of expenses to save.
+    """
+
     logging.info("Saving to JSON.")
 
     path = input("Store path: ")
     exp.to_json(pl.Path(path))
 
 def input_load_json() -> ExpenseList:
+    """
+    Loads an expense list from JSON file. Path to the file is provided
+    by the user. This function takes no parameters.
+
+    Returns
+    -------
+    ExpenseList
+        The expense list object created from loaded JSON contents.
+    """
+
     logging.info("Loading from JSON.")
 
     print("Warning: this will overwrite the current expense list.")
@@ -126,12 +194,30 @@ def input_load_json() -> ExpenseList:
     return exp
 
 def input_to_csv(exp: ExpenseList) -> None:
+    """
+    Saves the expense list to CSV, to the location provided by the user.
+    This function returns nothing.
+
+    exp : ExpenseList
+        List of expenses to save.
+    """
+
     logging.info("Saving to CSV.")
 
     path = input("Store path: ")
     exp.to_csv(pl.Path(path))
 
 def input_load_csv() -> ExpenseList:
+    """
+    Loads an expense list from CSV file. Path to the file is provided
+    by the user. This function takes no parameters.
+
+    Returns
+    -------
+    ExpenseList
+        The expense list object created from loaded CSV contents.
+    """
+
     logging.info("Loading from CSV.")
 
     print("Warning: this will overwrite the current expense list.")
