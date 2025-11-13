@@ -14,7 +14,7 @@ def main() -> None:
 
     exp = ExpenseList()
     while True:
-        print_options()
+        cli.print_options()
 
         try:
             choice = int(input("Enter option number: "))
