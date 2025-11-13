@@ -1,5 +1,5 @@
 from fintrack.expense import Expense, ExpenseList
-from fintrack.cli import *
+from fintrack import cli
 import logging
 
 logging.basicConfig(
@@ -25,31 +25,31 @@ def main() -> None:
         match choice:
             case 1:
                 logging.info(f"Choice {choice} - adding expense.")
-                input_add_expense(exp)
+                cli.input_add_expense(exp)
             case 2:
                 logging.info(f"Choice {choice} - view all.")
                 exp.view_all()
             case 3:
                 logging.info(f"Choice {choice} - filtering by date.")
-                input_expense_by_date(exp)
+                cli.input_expense_by_date(exp)
             case 4:
                 logging.info(f"Choice {choice} - filtering by category.")
-                input_expense_by_cat(exp)
+                cli.input_expense_by_cat(exp)
             case 5:
                 logging.info(f"Choice {choice} - summary by category.")
                 exp.summary_by_cat()
             case 6:
                 logging.info(f"Choice {choice} - to JSON.")
-                input_to_json(exp)
+                cli.input_to_json(exp)
             case 7:
                 logging.info(f"Choice {choice} - to CSV.")
-                input_to_csv(exp)
+                cli.input_to_csv(exp)
             case 8:
                 logging.info(f"Choice {choice} - loading from JSON.")
-                exp = input_load_json()
+                exp = cli.input_load_json()
             case 9:
                 logging.info(f"Choice {choice} - loading from CSV.")
-                exp = input_load_csv()
+                exp = cli.input_load_csv()
             case 10:
                 logging.info(f"Choice {choice} - exit.")
                 exit()
