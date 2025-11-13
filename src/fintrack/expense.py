@@ -7,6 +7,8 @@ import json
 import pandas as pd
 
 class Category(Enum):
+    """Enum for categories."""
+
     RENT = auto()
     TRANSPORT = auto()
     FOOD = auto()
@@ -27,6 +29,8 @@ CAT_TO_STR = {
 STR_TO_CAT = {v : k for k, v in CAT_TO_STR.items()}
 
 class ExpenseDict(TypedDict):
+    """TypedDict for easier type annotations."""
+
     amount: float
     category: str
     desc: str
@@ -38,6 +42,31 @@ class Expense():
                  category: Category,
                  desc: str,
                  date: dt.date | None = None):
+        """
+        Expense constructor.
+
+        Parameters
+        ----------
+        amount : float
+            Amount of money spent.
+        category : Category
+            Category of expense.
+        desc : str
+            Description of expense.
+        date : dt.date, optional
+            Date of the expense. Can be None.
+
+        Returns
+        -------
+        Expense
+            Expense class instance.
+
+        Raises
+        ------
+        ValueError
+            If the amount given is negative.
+        """
+
         if amount < 0:
             raise ValueError("Amount needs to be 0 or greater.")
 
@@ -47,6 +76,8 @@ class Expense():
         self.__date = date
 
     def __eq__(self, new: object):
+        """Standard eq function for comparison."""
+
         if not isinstance(new, Expense):
             return False
 
@@ -59,6 +90,20 @@ class Expense():
 
     @classmethod
     def from_dict(cls, new: ExpenseDict):
+        """
+        Creates a class instance from a dictionary.
+
+        Parameters
+        ----------
+        new : ExpenseDict
+            A dictionary to create a class instance from.
+
+        Returns
+        -------
+        Expense
+            An expense instance.
+        """
+
         new_cat = STR_TO_CAT[new["category"]]
         new_date = dt.datetime.strptime(str(new["date"]), "%Y-%m-%d").date()
         return cls(new["amount"],
@@ -83,6 +128,8 @@ class Expense():
         return self.__date
 
     def to_dict(self) -> ExpenseDict:
+        """Creates a dictionary out of the class instance."""
+
         return {
                 "amount" : self.amount,
                 "category" : CAT_TO_STR[self.category],
@@ -92,9 +139,25 @@ class Expense():
 
 class ExpenseList():
     def __init__(self, new: list[Expense] | None = None):
+        """
+        ExpenseList constructor.
+
+        Parameters
+        ----------
+        new : list[Expense], optional
+            A list of expenses to initialize the object instance. Is optional.
+
+        Returns
+        -------
+        ExpenseList
+            A class instance.
+        """
+
         self.__list = [] if new is None else list(new)
 
     def __eq__(self, new: object):
+        """Typical eq function for comparison."""
+
         if not isinstance(new, ExpenseList):
             return False
         return self.exp_list == new.exp_list
@@ -105,6 +168,20 @@ class ExpenseList():
 
     @classmethod
     def from_json(cls, store_path: pl.Path):
+        """
+        Creates an object instance out of a JSON file.
+
+        Parameters
+        ----------
+        store_path : pl.Path
+            Path to the JSON file.
+
+        Returns
+        -------
+        ExpenseList
+            An object instance.
+        """
+
         if not store_path.exists():
             print(f"Path {store_path} does not exists.")
             return None
@@ -126,6 +203,20 @@ class ExpenseList():
 
     @classmethod
     def from_csv(cls, store_path: pl.Path):
+        """
+        Creates an object instance out of a CSV file.
+
+        Parameters
+        ----------
+        store_path : pl.Path
+            Path to the CSV file.
+
+        Returns
+        -------
+        ExpenseList
+            An object instance.
+        """
+
         if not store_path.exists():
             print(f"Path {store_path} does not exists.")
             return None
@@ -144,12 +235,26 @@ class ExpenseList():
         return cls(tmp_list)
 
     def add(self, new: Expense) -> None:
+        """Adds a new expense."""
+
         self.exp_list.append(copy.copy(new))
 
     def to_dict(self) -> dict[str, list[ExpenseDict]]:
+        """Creates a dictionary representation of the class instance."""
+
         return { "exp_list" : [x.to_dict() for x in self.exp_list] }
 
     def to_json(self, store_path: pl.Path) -> None:
+        """
+        Creates a JSON file with class isntance's contents.
+        This function returns nothing.
+
+        Parameters
+        ----------
+        store_path : pl.Path
+            Location of storing the JSON file.
+        """
+
         if not store_path.exists():
             print(f"Path {store_path} does not exist.")
             return
@@ -166,6 +271,16 @@ class ExpenseList():
             json.dump(self.to_dict(), f)
 
     def to_csv(self, store_path: pl.Path) -> None:
+        """
+        Creates a CSV file with class isntance's contents.
+        This function returns nothing.
+
+        Parameters
+        ----------
+        store_path : pl.Path
+            Location of storing the CSV file.
+        """
+
         if not store_path.exists():
             print(f"Path {store_path} does not exist.")
             return
@@ -183,6 +298,15 @@ class ExpenseList():
         df.to_csv(store_path, index=False)
 
     def _to_df(self) -> pd.DataFrame:
+        """
+        Creates a DataFrame out of the expense list. Takes no parameters.
+
+        Returns
+        -------
+        pd.DataFrame
+            A pandas dataframe of expenses.
+        """
+
         tmp_dict = self.to_dict()
         tmp_list = tmp_dict["exp_list"]
         if not tmp_list:
@@ -193,6 +317,8 @@ class ExpenseList():
         return df
 
     def _total_expenses(self) -> float:
+        """Sums current expenses."""
+
         df = self._to_df()
         return sum(df["amount"])
 
@@ -200,13 +326,26 @@ class ExpenseList():
         print(f"Total expenses: {self._total_expenses()}")
 
     def view_all(self) -> None:
+        """Prints all expenses in the list."""
+
         print(self._to_df())
         self._print_total_expenses()
 
     def __sum_expenses(self, df: pd.DataFrame) -> float:
+        """Sums expenses out of a given dataframe with expenses."""
+
         return sum(df["amount"])
 
     def view_cat(self, cat: Category) -> None:
+        """
+        View expenses of a given category. Returns nothing.
+
+        Parameters
+        ----------
+        cat : Category
+            Category to view expenses of.
+        """
+
         df = self._to_df()
         cat_str = CAT_TO_STR[cat]
         df = df[df["category"] == cat_str]
@@ -215,6 +354,17 @@ class ExpenseList():
         print(f"Expenses on {cat_str}: {exp}")
 
     def view_by_date(self, f: dt.date, t: dt.date) -> None:
+        """
+        View expenses within a time period. Returns nothing.
+
+        Parameters
+        ----------
+        f : dt.date
+            Date from.
+        t : dt.date
+            Date to.
+        """
+
         df = self._to_df()
         f_pd = pd.to_datetime(f)
         t_pd = pd.to_datetime(t)
@@ -224,6 +374,11 @@ class ExpenseList():
         print(f"Expenses between {f} and {t}: {exp}")
 
     def summary_by_cat(self):
+        """
+        Prints a summary of expenses by category. Takes no parameters and
+        returns nothing.
+        """
+
         df = self._to_df()
         tmp_map = {c : 0 for c in CAT_TO_STR.values()}
         for c in tmp_map.keys():
