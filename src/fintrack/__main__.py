@@ -1,4 +1,4 @@
-from fintrack.expense import Expense, ExpenseList
+from fintrack.expense import ExpenseList
 from fintrack import cli
 import logging
 
