@@ -1,6 +1,7 @@
 from fintrack.expense import ExpenseList
 from fintrack import cli
 import logging
+import sys
 
 logging.basicConfig(
         filename="expense_tracker.log",
@@ -52,7 +53,7 @@ def main() -> None:
                 exp = cli.input_load_csv()
             case 10:
                 logging.info(f"Choice {choice} - exit.")
-                exit()
+                sys.exit(0)
             case _:
                 print("Invalid number.")
                 continue
