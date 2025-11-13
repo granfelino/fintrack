@@ -15,8 +15,13 @@ def main() -> None:
     exp = ExpenseList()
     while True:
         print_options()
-        choice = int(input("Enter option number: "))
 
+        try:
+            choice = int(input("Enter option number: "))
+        except ValueError:
+            print("Invalid  input.")
+            continue
+        
         match choice:
             case 1:
                 logging.info(f"Choice {choice} - adding expense.")
@@ -48,6 +53,9 @@ def main() -> None:
             case 10:
                 logging.info(f"Choice {choice} - exit.")
                 exit()
+            case _:
+                print("Invalid number.")
+                continue
 
 if __name__ == "__main__":
     main()
