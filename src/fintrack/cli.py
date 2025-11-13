@@ -28,12 +28,13 @@ def _input_date() -> dt.date | None:
         else:
             break
 
-    ys = int(y)
-    ms = int(m)
-    ds = int(d)
 
     ret = None
     try:
+        ys = int(y)
+        ms = int(m)
+        ds = int(d)
+
         ret = dt.date(ys, ms, ds)
     except ValueError:
         print("Invalid date given.")
@@ -44,7 +45,12 @@ def _input_date() -> dt.date | None:
 def input_add_expense(exp: ExpenseList) -> None:
     logging.info("Adding expense.")
 
-    amt = float(input("Enter amount: "))
+    try:
+        amt = float(input("Enter amount: "))
+    except ValueError:
+        print("Enter a numeric value.")
+        return
+
     if amt < 0:
         logging.info("Negative amount input.")
         print("Amount cannot be negative.")
@@ -103,7 +109,7 @@ def input_expense_by_cat(exp: ExpenseList) -> None:
 def input_to_json(exp: ExpenseList) -> None:
     logging.info("Saving to JSON.")
 
-    path = input("Store path (to a JSON file): ")
+    path = input("Store path: ")
     exp.to_json(pl.Path(path))
 
 def input_load_json() -> ExpenseList:
@@ -122,7 +128,7 @@ def input_load_json() -> ExpenseList:
 def input_to_csv(exp: ExpenseList) -> None:
     logging.info("Saving to CSV.")
 
-    path = input("Store path (to a CSV file): ")
+    path = input("Store path: ")
     exp.to_csv(pl.Path(path))
 
 def input_load_csv() -> ExpenseList:
