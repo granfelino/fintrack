@@ -1,3 +1,10 @@
+"""
+Fintrack app entry point. Prompts the user for input.
+
+Usage:
+    `python -m fintrack`
+"""
+
 from fintrack.expense import ExpenseList
 from fintrack import cli
 import logging
