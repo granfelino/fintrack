@@ -63,12 +63,12 @@ def test_expense_list():
 
 def test_expense_list_add(exp, exp_list):
     exp_list.add(exp)
-    assert next(x for x in exp_list.list) == exp
+    assert next(x for x in exp_list.exp_list) == exp
 
 def test_expense_list_to_dict(exp_list):
     result = exp_list.to_dict()
     assert isinstance(result, dict)
-    assert "list" in result.keys()
+    assert "exp_list" in result.keys()
 
 def test_expense_list_to_json(exp, exp_list, tmp_path):
     exp_list.add(exp)

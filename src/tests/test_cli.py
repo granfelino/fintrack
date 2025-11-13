@@ -41,9 +41,9 @@ def test_input_add(exp, monkeypatch):
     monkeypatch.setattr("builtins.input", lambda _: next(inputs))
     cli.input_add_expense(exp)
 
-    assert len(exp.list) == 2
+    assert len(exp.exp_list) == 2
 
-    g = (x for x in exp.list)
+    g = (x for x in exp.exp_list)
     first = next(g)
     second = next(g)
     assert first == second
@@ -53,7 +53,7 @@ def test_input_add_inv_amt(exp, monkeypatch):
     monkeypatch.setattr("builtins.input", lambda _: inputs)
     cli.input_add_expense(exp)
 
-    assert len(exp.list) == 1
+    assert len(exp.exp_list) == 1
 
 def test_input_add_inv_cat(exp, monkeypatch):
     inputs = ["100", "invalid"]
@@ -61,7 +61,7 @@ def test_input_add_inv_cat(exp, monkeypatch):
     monkeypatch.setattr("builtins.input", lambda _: next(inputs))
     cli.input_add_expense(exp)
 
-    assert len(exp.list) == 1
+    assert len(exp.exp_list) == 1
 
 def test_input_add_no_date(exp, monkeypatch):
     inputs = ["100", "food", "food shopping", "n"]
@@ -69,7 +69,7 @@ def test_input_add_no_date(exp, monkeypatch):
     monkeypatch.setattr("builtins.input", lambda _: next(inputs))
     cli.input_add_expense(exp)
 
-    assert len(exp.list) == 2
+    assert len(exp.exp_list) == 2
 
 def test_input_to_json(exp, monkeypatch, tmp_path):
     monkeypatch.setattr("builtins.input", lambda _: str(tmp_path))

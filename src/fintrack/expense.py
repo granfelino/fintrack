@@ -1,6 +1,6 @@
 from enum import Enum, auto
 import datetime as dt
-from typing import TypedDict
+from typing import TypedDict, cast
 import copy
 import pathlib as pl
 import json
@@ -60,7 +60,7 @@ class Expense():
     @classmethod
     def from_dict(cls, new: ExpenseDict):
         new_cat = STR_TO_CAT[new["category"]]
-        new_date = dt.datetime.strptime(new["date"], "%Y-%m-%d").date()
+        new_date = dt.datetime.strptime(str(new["date"]), "%Y-%m-%d").date()
         return cls(new["amount"],
                    new_cat,
                    new["desc"],
@@ -79,10 +79,10 @@ class Expense():
         return self.__desc
 
     @property
-    def date(self) -> dt.date:
+    def date(self) -> dt.date | None:
         return self.__date
 
-    def to_dict(self) -> TypedDict:
+    def to_dict(self) -> ExpenseDict:
         return {
                 "amount" : self.amount,
                 "category" : CAT_TO_STR[self.category],
@@ -97,10 +97,10 @@ class ExpenseList():
     def __eq__(self, new: object):
         if not isinstance(new, ExpenseList):
             return False
-        return self.list == new.list
+        return self.exp_list == new.exp_list
 
     @property
-    def list(self) -> list[Expense]:
+    def exp_list(self) -> list[Expense]:
         return self.__list
 
     @classmethod
@@ -117,11 +117,11 @@ class ExpenseList():
         with open(store_path, "r") as f:
             new = json.load(f)
 
-        if "list" not in new.keys():
+        if "exp_list" not in new.keys():
             print("Invalid JSON contents.")
             return None
 
-        new_list = [Expense.from_dict(x) for x in new["list"]]
+        new_list = [Expense.from_dict(x) for x in new["exp_list"]]
         return cls(new_list)
 
     @classmethod
@@ -140,13 +140,14 @@ class ExpenseList():
             return None
 
         dict_list = df.to_dict(orient="records")
-        return cls([Expense.from_dict(x) for x in dict_list])
+        tmp_list = [Expense.from_dict(cast(ExpenseDict, x)) for x in dict_list]
+        return cls(tmp_list)
 
     def add(self, new: Expense) -> None:
-        self.list.append(copy.copy(new))
+        self.exp_list.append(copy.copy(new))
 
-    def to_dict(self) -> dict[str, ExpenseDict]:
-        return { "list" : [x.to_dict() for x in self.list] }
+    def to_dict(self) -> dict[str, list[ExpenseDict]]:
+        return { "exp_list" : [x.to_dict() for x in self.exp_list] }
 
     def to_json(self, store_path: pl.Path) -> None:
         if not store_path.exists():
@@ -178,12 +179,12 @@ class ExpenseList():
             print("File already exists. Aborting.")
 
         tmp_dict = self.to_dict()
-        df = pd.DataFrame(tmp_dict["list"])
+        df = pd.DataFrame(tmp_dict["exp_list"])
         df.to_csv(store_path, index=False)
 
     def _to_df(self) -> pd.DataFrame:
         tmp_dict = self.to_dict()
-        tmp_list = tmp_dict["list"]
+        tmp_list = tmp_dict["exp_list"]
         if not tmp_list:
             return pd.DataFrame(columns=["amount", "category", "desc", "date"])
 

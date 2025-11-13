@@ -19,7 +19,7 @@ def print_options() -> None:
     print("10. Exit")
     print()
 
-def _input_date() -> dt.date:
+def _input_date() -> dt.date | None:
     while True:
         try:
             y, m, d = input("Enter each after space - year, month, day: ").split()
@@ -28,13 +28,13 @@ def _input_date() -> dt.date:
         else:
             break
 
-    y = int(y)
-    m = int(m)
-    d = int(d)
+    ys = int(y)
+    ms = int(m)
+    ds = int(d)
 
     ret = None
     try:
-        ret = dt.date(y, m, d)
+        ret = dt.date(ys, ms, ds)
     except ValueError:
         print("Invalid date given.")
         return ret
@@ -77,9 +77,13 @@ def input_expense_by_date(exp: ExpenseList) -> None:
 
     print("Date FROM")
     f = _input_date()
+    if f is None:
+        return 
 
     print("Date TO")
     t = _input_date()
+    if t is None:
+        return
 
     if t < f:
         print("TO is an earlier date than FROM")
