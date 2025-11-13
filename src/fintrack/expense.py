@@ -159,7 +159,7 @@ class ExpenseList():
 
         store_path = store_path / "exp.json"
         if store_path.exists():
-            print(f"File already exists. Aborting.")
+            print("File already exists. Aborting.")
 
         with open(store_path, "w") as f:
             json.dump(self.to_dict(), f)
@@ -175,7 +175,7 @@ class ExpenseList():
 
         store_path = store_path / "exp.csv"
         if store_path.exists():
-            print(f"File already exists. Aborting.")
+            print("File already exists. Aborting.")
 
         tmp_dict = self.to_dict()
         df = pd.DataFrame(tmp_dict["list"])
